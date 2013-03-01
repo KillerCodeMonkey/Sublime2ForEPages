@@ -1,0 +1,8 @@
+[
+   { "caption": "-" },
+   { "caption": "Check syntax", "command": "check_syntax" },
+   { "caption": "Restart epages6 application server", "command": "restart" },
+   { "caption": "Open Containing Folder in Cervisia...", "command": "open_cervisia" },
+   { "caption": "Open file on consulting vm", "command": "open_file_on_cs_vm"},
+   { "caption": "-" }
+]

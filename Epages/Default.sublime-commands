@@ -1,0 +1,58 @@
+[
+    {
+        "caption": "epages6: check syntax",
+        "command": "check_syntax"
+    },
+    {
+        "caption": "epages6: open containing folder in Cervisia",
+        "command": "open_cervisia"
+    },
+    {
+        "caption": "epages6: open template",
+        "command": "open_template"
+    },
+    {
+        "caption": "epages6: restart application server",
+        "command": "restart"
+    },
+    {
+        "caption": "epages6: correct permissions",
+        "command": "correct_permissions"
+    },
+    {
+        "caption": "epages6: open file on consulting vm",
+        "command": "open_file_on_cs_vm"
+    },
+    {
+        "caption": "epages6: open error log",
+        "command": "open_error_log"
+    },
+    {
+        "caption": "epages6: open debug log",
+        "command": "open_debug_log"
+    },
+    {
+        "caption": "epages6: Perl::Critic",
+        "command": "perl_critic"
+    },
+    {
+        "caption": "epages6: organize imports",
+        "command": "organize_imports"
+    },
+    {
+        "caption": "epages6: import XML",
+        "command": "import"
+    },
+    {
+        "caption": "epages6: import hook XML",
+        "command": "import_hook"
+    },
+    {
+        "caption": "epages6: delete XML",
+        "command": "delete"
+    },
+    {
+        "caption": "epages6: delete hook XML",
+        "command": "delete_hook"
+    }
+]

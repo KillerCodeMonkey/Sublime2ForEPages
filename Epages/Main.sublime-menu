@@ -1,0 +1,74 @@
+[
+    {
+        "id": "tools",
+        "children":
+        [
+            {
+                "caption": "epages6",
+                "children":
+                [
+
+                    {
+                        "caption": "Open containing folder in Cervisia",
+                        "command": "open_cervisia"
+                    },
+                    {
+                        "caption": "Restart application server",
+                        "command": "restart"
+                    },
+                    { "caption": "-" },
+                    {
+                        "caption": "Open file on consulting vm",
+                        "command": "open_file_on_cs_vm"
+                    },
+                    {
+                        "caption": "Open error log",
+                        "command": "open_error_log"
+                    },
+                    {
+                        "caption": "Open debug log",
+                        "command": "open_debug_log"
+                    },
+                    {
+                        "caption": "Open template",
+                        "command": "open_template"
+                    },
+                    { "caption": "-" },
+                    {
+                        "caption": "Check syntax",
+                        "command": "check_syntax"
+                    },
+                    {
+                        "caption": "Perl::Critic",
+                        "command": "perl_critic"
+                    },
+                    {
+                        "caption": "Organize imports",
+                        "command": "organize_imports"
+                    },
+                    {
+                        "caption": "Correct permissions",
+                        "command": "correct_permissions"
+                    },
+                    { "caption": "-" },
+                    {
+                        "caption": "Import XML",
+                        "command": "import"
+                    },
+                    {
+                        "caption": "Import hook XML",
+                        "command": "import_hook"
+                    },
+                    {
+                        "caption": "Delete XML",
+                        "command": "delete"
+                    },
+                    {
+                        "caption": "Delete hook XML",
+                        "command": "delete_hook"
+                    }
+                ]
+            }
+        ]
+    }
+]
