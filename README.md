@@ -5,7 +5,20 @@ sublime text 2 epages plugins
 
 Linux & Windows
 =====
-Nice to have:
+Features:
+* Import/delete XML
+* Import/delete Hook
+* Restart AppSrv
+* Restart perl
+* Ctags perl (linux)
+* Perl critic
+* Perl syntax check
+* Perl organize imports
+* Open template
+* Open in cvs
+* Correct permissions (linux)
+
+ToDo:
 * copy to shared
 * ctags for win (?)
 * JSLint/XMLLint -> DTD?
