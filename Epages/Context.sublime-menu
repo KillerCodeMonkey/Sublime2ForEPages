@@ -1,8 +1,9 @@
 [
    { "caption": "-" },
    { "caption": "Check syntax", "command": "check_syntax" },
-   { "caption": "Restart epages6 application server", "command": "restart" },
-   { "caption": "Open Containing Folder in Cervisia...", "command": "open_cervisia" },
-   { "caption": "Open file on consulting vm", "command": "open_file_on_cs_vm"},
+   { "caption": "Restart epages6 application server", "command": "restart_app" },
+   { "caption": "Restart perl", "command": "restart_perl" },
+   { "caption": "Open containing folder in cvs...", "command": "open_csv" },
+//   { "caption": "Open file on consulting vm", "command": "open_file_on_cs_vm"},
    { "caption": "-" }
 ]

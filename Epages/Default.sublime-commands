@@ -4,8 +4,8 @@
         "command": "check_syntax"
     },
     {
-        "caption": "epages6: open containing folder in Cervisia",
-        "command": "open_cervisia"
+        "caption": "epages6: open containing folder in cvs",
+        "command": "open_cvs"
     },
     {
         "caption": "epages6: open template",
@@ -13,16 +13,20 @@
     },
     {
         "caption": "epages6: restart application server",
-        "command": "restart"
+        "command": "restart_app"
+    },
+    {
+        "caption": "epages6: restart perl",
+        "command": "restart_perl"
     },
     {
         "caption": "epages6: correct permissions",
         "command": "correct_permissions"
     },
-    {
+/*    {
         "caption": "epages6: open file on consulting vm",
         "command": "open_file_on_cs_vm"
-    },
+    }, */
     {
         "caption": "epages6: open error log",
         "command": "open_error_log"

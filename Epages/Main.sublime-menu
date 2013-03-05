@@ -9,18 +9,22 @@
                 [
 
                     {
-                        "caption": "Open containing folder in Cervisia",
-                        "command": "open_cervisia"
+                        "caption": "Open containing folder in cvs",
+                        "command": "open_cvs"
                     },
                     {
                         "caption": "Restart application server",
-                        "command": "restart"
+                        "command": "restart_app"
+                    },
+                    {
+                        "caption": "Restart perl",
+                        "command": "restart_perl"
                     },
                     { "caption": "-" },
-                    {
+                    /*{
                         "caption": "Open file on consulting vm",
                         "command": "open_file_on_cs_vm"
-                    },
+                    },*/
                     {
                         "caption": "Open error log",
                         "command": "open_error_log"

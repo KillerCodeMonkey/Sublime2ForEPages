@@ -1,5 +1,8 @@
 {
-	// working path, like C:\epages\ or /home/user/Developer/epages/user-vm1/
+	// working path, like C:\epages\ or /home/user/Developer/epages/
 	// with trailing slash/backslash
-	"working_path" : "/home/jonas/Entwicklung/epages6/"
+	"working_path" : "/home/Arbeit/",
+
+	// name of cvs tool
+	"cvs" : "cervisia"
 }
