@@ -3,6 +3,6 @@
 	// with trailing slash/backslash
 	"working_path" : "",
 
-	// name of cvs tool e.g. winmerge, cervisia
-	"cvs" : "cervisia"
+	// name of cvs tool e.g. wincvs, cervisia
+	"cvs" : ""
 }
