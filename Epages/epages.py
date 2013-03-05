@@ -1,8 +1,8 @@
 import sublime, sublime_plugin
 import ep_action, ep_helper
 
-global helper = new ep_helper()
-global action = new ep_action(helper)
+helper = ep_helper.ep_helper(sublime.load_settings("Epages.sublime-settings"))
+action = ep_action.ep_action(helper)
 
 # class OpenFileOnCsVmCommand(sublime_plugin.WindowCommand):
 #     def run(self):

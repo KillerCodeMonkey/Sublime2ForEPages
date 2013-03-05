@@ -4,10 +4,10 @@ import subprocess
 
 class ep_helper(object):
 
-    def __init__(self):
-        settings = sublime.load_settings("Epages.sublime-settings")
-        self.working_path = settings.get("working_path")
-        self.cvs = settings.get("cvs")
+    def __init__(self, settings):
+        self.settings = settings
+        self.working_path = self.settings.get("working_path")
+        self.cvs = self.settings.get("cvs")
         self.unix = False if sys.platform == "win32" else True
 
     def vm_data(self, filename):
@@ -29,24 +29,22 @@ class ep_helper(object):
         except UnicodeDecodeError:
             print_stderr = print_stderr.decode("iso8859-1")
 
-        return {'stdout' : print_stdout, 'stderr' : print_stderr}
+        return print_stdout + '\n\n' + print_stderr
 
-    def match_shared(self, filename):
-        if self.unix:
-
-        else:
+    def system_call(self, command):
+        subprocess.call(command, shell=True)
 
     def is_perl(self, filename):
-        return re.match(r".*\.(pm|pl|t)$", filename.lowercase)
+        return re.match(r".*\.(pm|pl|t)$", filename.lower())
 
     def is_perl_module(self, filename):
-        return re.match(r".*\.pm$",  filename.lowercase)
+        return re.match(r".*\.pm$",  filename.lower())
 
     def is_xml(self, filename):
-        return re.match(r".*\.xml$",  filename.lowercase)
+        return re.match(r".*\.xml$",  filename.lower())
 
     def is_js(self, filename):
-        return re.match(r".*\.js$",  filename.lowercase)
+        return re.match(r".*\.js$",  filename.lower())
 
     def is_json(self, filename):
-        return re.match(r".*\.json$",  filename.lowercase)
+        return re.match(r".*\.json$",  filename.lower())
