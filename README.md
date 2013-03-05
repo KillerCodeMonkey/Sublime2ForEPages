@@ -17,6 +17,7 @@ Features:
 * Open template
 * Open in cvs
 * Correct permissions (linux)
+* Log, StackTrace snippet (perl)
 
 ToDo:
 * copy to shared
