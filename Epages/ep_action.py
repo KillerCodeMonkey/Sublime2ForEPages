@@ -25,6 +25,14 @@ class ep_action(object):
                 return "error"
             else:
                 return self.helper.system_exec(self.helper.working_path + "Perl/bin/perl.exe " + filename)
+        else if self.helper.is_js(filename):
+            if self.helper.unix:
+                vm = self.helper.vm_data(filename)["vm"]
+                vm_filename = self.helper.vm_data(filename)["filename"]
+                if vm: return self.helper.system_exec("ssh root@" + vm + " /srv/epages/eproot/Perl/bin/perl /srv/epages/eproot/Cartridges/DE_EPAGES/Presentation/Scripts/checkJSSyntax.pl -type Store -warnings -file " + "/srv/epages/eproot/" + vm_filename)
+                return "error"
+            else:
+                return self.helper.system_exec(self.helper.working_path + "Perl/bin/perl.exe " + self.helper.working_path + "Cartridges\DE_EPAGES\Presentation\Scripts\checkJSSyntax.pl -type Store -warnings -file " + filename)
         # else if ep_helper.is_xml(filename):
 
     def perl_critic(self, filename):
@@ -60,7 +68,8 @@ class ep_action(object):
             if vm: return self.helper.system_exec("ssh root@" + vm + " /etc/init.d/epages6 restart_perl")
             return "error"
         else:
-            return self.helper.system_exec("restart epages")
+            self.helper.system_exec("net stop epages")
+            return self.helper.system_exec("net start epages")
 
     def restart_perl(self, filename):
         if self.helper.unix:
@@ -68,7 +77,8 @@ class ep_action(object):
             if vm: return self.helper.system_exec("ssh root@" + vm + " /etc/init.d/epages6 restart_perl")
             return "error"
         else:
-            return self.helper.system_exec("restart epages")
+            self.helper.system_exec("net stop epages")
+            return self.helper.system_exec("net start epages")
 
     def restart_app(self, filename):
         if self.helper.unix:
@@ -76,7 +86,8 @@ class ep_action(object):
             if vm: return self.helper.system_exec("ssh root@" + vm + " /etc/init.d/epages6 start_service")
             return "error"
         else:
-            return self.helper.system_exec("restart epages")
+            self.helper.system_exec("net stop epages")
+            return self.helper.system_exec("net start epages")
 
     def import_xml(self, filename):
         if self.helper.unix:
