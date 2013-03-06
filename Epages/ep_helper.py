@@ -1,6 +1,8 @@
 import sys
 import re
 import subprocess
+import json
+import os
 
 class ep_helper(object):
 
@@ -48,3 +50,24 @@ class ep_helper(object):
 
     def is_json(self, filename):
         return re.match(r".*\.json$",  filename.lower())
+
+    def ensure_dir(self, f):
+        d = os.path.dirname(f)
+        if not os.path.exists(d):
+            os.makedirs(d)
+
+    def write_json_file(self, filename, jsondata):
+        self.ensure_dir(filename)
+        with open(filename, 'w+') as outfile:
+            json.dump(jsondata, outfile, sort_keys=False, indent=4, separators=(',', ': '))
+            outfile.close()
+            return jsondata
+        return None
+
+    def read_json_file(self, filename):
+        self.ensure_dir(filename)
+        with open(filename, 'r') as infile:
+            data = json.load(infile)
+            infile.close()
+            return data
+        return None

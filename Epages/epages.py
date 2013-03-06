@@ -1,8 +1,11 @@
 import sublime, sublime_plugin
-import ep_action, ep_helper
+import ep_action, ep_helper, ep_task
+import re
+import os
 
 helper = ep_helper.ep_helper(sublime.load_settings("Epages.sublime-settings"))
 action = ep_action.ep_action(helper)
+tasks = ep_task.ep_task(helper)
 
 # class OpenFileOnCsVmCommand(sublime_plugin.WindowCommand):
 #     def run(self):
@@ -146,3 +149,93 @@ class OpenTemplateCommand(sublime_plugin.WindowCommand):
             sublime.error_message("Not an epages6 folder")
         else:
             self.window.open_file(template)
+
+class TaskChooseCommand(sublime_plugin.WindowCommand):
+
+    def run(self):
+        self.tasklist = tasks.get_task_list()
+        if len(self.tasklist) > 0:
+            self.window.show_quick_panel ( ["Press ESC to create a new Task","Close current Task"]+self.tasklist, self.task_choose )
+        else:
+            self.window.run_command('task_create')
+
+    def description(self):
+        current_task = tasks.get_current_task()
+        if current_task == None:
+            return "No current Task"
+        else:
+            task = tasks.get_task(tasks.path+current_task+".task")
+            return current_task + ' ('+ str(len(task["Files"])) + ')'
+
+    def task_choose(self, i):
+        # SKip the first Entry for info message for creation
+        i = i - 2
+        if i > -1:
+            task = self.tasklist[i]
+            tasks.set_current_task( task[0] )
+        elif i == -1:
+            tasks.set_current_task( None )
+        else:
+            self.window.run_command('task_create')
+
+class TaskCreateCommand(sublime_plugin.WindowCommand):
+    def run(self):
+        self.window.show_input_panel('Create a Task:', '', self.create_task, None, None)
+
+    def create_task(self,input):
+        self.taskname = input
+        if input != '':
+            self.window.show_input_panel('Description:', '', self.create_taskdescription, None, None)
+
+    def create_taskdescription(self, description):
+        if description != '':
+            tasks.create_task(self.taskname, description)
+
+class TaskFileAddCommand(sublime_plugin.WindowCommand):
+    def run(self):
+        filename = self.window.active_view().file_name()
+        tasks.add_file(filename)
+
+    def is_visible(self):
+        filename = self.window.active_view().file_name()
+        return tasks.get_current_task() != None and not tasks.contains_file(filename)
+
+class TaskFileRemoveCommand(sublime_plugin.WindowCommand):
+    def run(self):
+        filename = self.window.active_view().file_name()
+        tasks.remove_file(filename)
+
+    def is_visible(self):
+        filename = self.window.active_view().file_name()
+        return tasks.get_current_task() != None and tasks.contains_file(filename)
+
+class TaskOpenTaskFileCommand(sublime_plugin.WindowCommand):
+    def run(self):
+        task = tasks.get_current_task()
+        self.window.open_file(tasks.path+task+".task")
+
+    def is_visible(self):
+        return tasks.get_current_task() != None
+
+class TaskListFilesCommand(sublime_plugin.WindowCommand):
+    def run(self):
+        files = tasks.list_files()
+        self.filelist = []
+        for f in files:
+            head, tail = os.path.split(f)
+            self.filelist.append([tail,f])
+        if len(self.filelist) > 0:
+            self.window.show_quick_panel ( self.filelist+["Open all"], self.open_file )
+
+    def open_file(self, i):
+        if i > -1 and i != len(self.filelist):
+            self.window.open_file(self.filelist[i][1])
+        elif i == len(self.filelist):
+            for f in self.filelist:
+                self.window.open_file(f[1])
+
+
+    def is_visible(self):
+        taskname = tasks.get_current_task()
+        task = tasks.get_task(tasks.path+taskname+".task")
+        return task != None and len(task["Files"]) > 0
