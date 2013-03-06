@@ -25,7 +25,7 @@ class ep_action(object):
                 return "error"
             else:
                 return self.helper.system_exec(self.helper.working_path + "Perl/bin/perl.exe " + filename)
-        else if self.helper.is_js(filename):
+        elif self.helper.is_js(filename):
             if self.helper.unix:
                 vm = self.helper.vm_data(filename)["vm"]
                 vm_filename = self.helper.vm_data(filename)["filename"]
