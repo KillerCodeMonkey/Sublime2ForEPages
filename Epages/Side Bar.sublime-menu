@@ -1,0 +1,4 @@
+[
+   { "caption": "-" },
+   { "caption": "Open containing folder in cvs...", "command": "open_cvs" }
+]
