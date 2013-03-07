@@ -14,10 +14,11 @@ Features:
 * Perl critic
 * Perl syntax check
 * Perl organize imports
-* Open template
+* Open template (copy template debugging comment -> strg+shift+o in sublime -> paste -> press enter -> hf)
 * Open in cvs
 * Correct permissions (linux)
 * Log, StackTrace snippet (perl)
+* virtual folders (summarize files to virtual folders/tasks)
 
 ToDo:
 * copy to shared
