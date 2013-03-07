@@ -3,7 +3,7 @@
    { "caption": "Check syntax", "command": "check_syntax" },
    { "caption": "Restart epages6 application server", "command": "restart_app" },
    { "caption": "Restart perl", "command": "restart_perl" },
-   { "caption": "Open containing folder in cvs...", "command": "open_csv" },
+   { "caption": "Open containing folder in cvs...", "command": "open_cvs" },
 //   { "caption": "Open file on consulting vm", "command": "open_file_on_cs_vm"},
    { "caption": "-" }
 ]
