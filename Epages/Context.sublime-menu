@@ -5,5 +5,8 @@
    { "caption": "Restart perl", "command": "restart_perl" },
    { "caption": "Open containing folder in cvs...", "command": "open_csv" },
 //   { "caption": "Open file on consulting vm", "command": "open_file_on_cs_vm"},
-   { "caption": "-" }
+   { "caption": "-" },
+   { "command": "task_choose"},
+   { "caption": "Open File(s)...", "command": "task_list_files"},
+   { "caption": "View Task Configuration", "command": "task_open_task_file"}
 ]

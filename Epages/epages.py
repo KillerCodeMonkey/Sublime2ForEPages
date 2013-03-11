@@ -1,11 +1,13 @@
 import sublime, sublime_plugin
-import ep_action, ep_helper, ep_task
+import ep_action, ep_helper, ep_task, ep_cvs
 import re
 import os
+import threading
 
 helper = ep_helper.ep_helper(sublime.load_settings("Epages.sublime-settings"))
 action = ep_action.ep_action(helper)
 tasks = ep_task.ep_task(helper)
+cvs = ep_cvs.ep_cvs(helper)
 
 # class OpenFileOnCsVmCommand(sublime_plugin.WindowCommand):
 #     def run(self):
@@ -20,7 +22,19 @@ class ep_on_post_save(sublime_plugin.EventListener):
         # update ctags on vm
         action.update_ctags(view.file_name())
 
+    def on_activated(self, view):
+        self.view = view
+        self.filename = view.file_name()
+        if self.filename:
+            t = threading.Thread(target=self.cvs_status())
+            t.start()
 
+    def cvs_status(self):
+        status = cvs.status( self.filename )
+        if status["status"]:
+            self.view.set_status("cvs_a", "Status: " + status["status"])
+        if status["branch"]:
+            self.view.set_status("cvs_b", "Branch: " + status["branch"])
 
 class OpenErrorLogCommand(sublime_plugin.WindowCommand):
     def run(self):
@@ -34,7 +48,7 @@ class OpenErrorLogCommand(sublime_plugin.WindowCommand):
 class OpenDebugLogCommand(sublime_plugin.WindowCommand):
     def run(self):
         filename = self.window.active_view().file_name()
-        log = action.log(filename, "debug")
+        log = action.log(filename, "dev")
         if log == "error":
             sublime.error_message("Not an epages6 folder")
         else:
@@ -239,3 +253,30 @@ class TaskListFilesCommand(sublime_plugin.WindowCommand):
         taskname = tasks.get_current_task()
         task = tasks.get_task(tasks.path+taskname+".task")
         return task != None and len(task["Files"]) > 0
+
+# class CvsStatusCommand(sublime_plugin.WindowCommand):
+#     def run(self):
+#         self.filename = self.window.active_view().file_name()
+#         #self.panel = self.window.new_file()
+#         t = threading.Thread(target=self.cvs_status())
+#         t.start()
+
+#     def cvs_status(self):
+#         relpath = os.path.relpath( self.filename ,'.')
+#         path = os.path.dirname( relpath )
+#         filename = os.path.basename( relpath )
+#         cmd = "cd " + path + "&& cvs status " + filename
+#         cvs_status = helper.system_exec( cmd )
+#         m = re.compile(r".*?Status:\s*([a-zA-Z -]*)\s*.*?Sticky Tag:\s*(\S*).*", re.S).match(cvs_status)
+#         if m:
+#             self.window.active_view().set_status("cvs_status", "Status: " + m.group(1))
+#             self.window.active_view().set_status("cvs_branch", "Branch: " + m.group(2))
+
+#     def write_to_panel(self):
+#         if len(self.textbuffer):
+#             panel_edit = self.panel.begin_edit()
+#             self.panel.insert(panel_edit, self.panel.size(), self.textbuffer)
+#             self.panel.end_edit(panel_edit)
+#             self.panel.show(self.panel.size())
+#             self.textbuffer = ""
+#             self.window.run_command("show_panel", {"panel": "output.test_panel"})
