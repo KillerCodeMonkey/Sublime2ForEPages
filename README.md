@@ -29,3 +29,4 @@ ToDo:
 * FileDiff
 * CodeIntel
 * Code-beautifier: JS, Perl::Tidy
+* Tasks in Sidebar like "Open files"
