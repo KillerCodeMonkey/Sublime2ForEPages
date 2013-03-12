@@ -12,9 +12,9 @@ class ep_action(object):
         if self.helper.is_perl_module(filename):
             if self.helper.unix:
                 vm = self.helper.vm_data(filename)["vm"]
-                if vm: return self.helper.system_exec("ssh root@" + vm + " /bin/bash /srv/epages/eproot/maketags.sh &")
+                if vm: self.helper.system_call("ssh root@" + vm + " /bin/bash /srv/epages/eproot/maketags.sh &")
             else:
-                return self.helper.system_exec("restart epages")
+                self.helper.system_call("restart epages")
 
     def check_syntax(self, filename):
         if self.helper.is_perl(filename):

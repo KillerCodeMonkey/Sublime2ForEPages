@@ -27,6 +27,23 @@
         "caption": "epages6: open file on consulting vm",
         "command": "open_file_on_cs_vm"
     }, */
+    { "command": "task_choose" },
+    {
+        "caption": "epages6: open file(s)...",
+        "command": "task_list_files"
+    },
+    {
+        "caption": "epages6: add file",
+        "command": "task_file_add"
+    },
+    {
+        "caption": "epages6: remove file",
+        "command": "task_file_remove"
+    },
+    {
+        "caption": "epages6: view task configuration",
+        "command": "task_open_task_file"
+    },
     {
         "caption": "epages6: open error log",
         "command": "open_error_log"

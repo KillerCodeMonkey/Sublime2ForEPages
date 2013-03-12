@@ -1,8 +1,8 @@
 {
-	// working path, like C:\epages\ or /home/user/Developer/epages/
+	// working path, like C:\\epages\\ or /home/user/Developer/epages/
 	// with trailing slash/backslash
 	"working_path" : "",
 
-	// name of cvs tool e.g. wincvs, cervisia
+	// name of cvs tool e.g. cervisia (wincvs not supported)
 	"cvs" : ""
 }

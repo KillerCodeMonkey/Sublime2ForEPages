@@ -5,7 +5,6 @@
    { "caption": "Restart perl", "command": "restart_perl" },
    { "caption": "Open containing folder in cvs...", "command": "open_cvs" },
    { "caption": "CVS Update", "command": "cvs_update" },
-//   { "caption": "Open file on consulting vm", "command": "open_file_on_cs_vm"},
    { "caption": "-" },
    { "command": "task_choose"},
    { "command": "task_file_status"},
