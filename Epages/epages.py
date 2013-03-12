@@ -9,14 +9,6 @@ action = ep_action.ep_action(helper)
 tasks = ep_task.ep_task(helper)
 cvs = ep_cvs.ep_cvs(helper)
 
-# class OpenFileOnCsVmCommand(sublime_plugin.WindowCommand):
-#     def run(self):
-#         vm_data = ep_helper.get_vm_data(self.view.file_name())
-#         if vm_data["is_epages"]:
-#             self.view.window().open_file("~/Entwicklung/epages6/cs-vm-lin2/" + vm_data["filename"])
-#         else:
-#             sublime.error_message("Not an epages6 folder")
-
 class ep_on_post_save(sublime_plugin.EventListener):
     def on_post_save(self, view):
         # update ctags on vm
@@ -30,11 +22,15 @@ class ep_on_post_save(sublime_plugin.EventListener):
             t.start()
 
     def cvs_status(self):
-        status = cvs.status( self.filename )
-        if status["status"]:
-            self.view.set_status("cvs_a", "Status: " + status["status"])
-        if status["branch"]:
-            self.view.set_status("cvs_b", "Branch: " + status["branch"])
+        status = cvs.status( self.filename, self.write_status )
+
+
+    def write_status(self, status):
+        self.view.set_status("cvs_1", "");
+        if "status" in status:
+            self.view.set_status("cvs_2", "Status: " + status["status"])
+        if "branch" in status:
+            self.view.set_status("cvs_3", "Branch: " + status["branch"])
 
 class OpenErrorLogCommand(sublime_plugin.WindowCommand):
     def run(self):
@@ -169,7 +165,7 @@ class TaskChooseCommand(sublime_plugin.WindowCommand):
     def run(self):
         self.tasklist = tasks.get_task_list()
         if len(self.tasklist) > 0:
-            self.window.show_quick_panel ( ["Press ESC to create a new Task","Close current Task"]+self.tasklist, self.task_choose )
+            self.window.show_quick_panel ( ["Press ESC to create a new Task", "Close current Task"]+self.tasklist, self.task_choose )
         else:
             self.window.run_command('task_create')
 
@@ -178,11 +174,11 @@ class TaskChooseCommand(sublime_plugin.WindowCommand):
         if current_task == None:
             return "No current Task"
         else:
-            task = tasks.get_task(tasks.path+current_task+".task")
+            task = tasks.get_task( os.path.join(tasks.path, current_task+".task") )
             return current_task + ' ('+ str(len(task["Files"])) + ')'
 
     def task_choose(self, i):
-        # SKip the first Entry for info message for creation
+        # SKip the first Entries for info message for creation
         i = i - 2
         if i > -1:
             task = self.tasklist[i]
@@ -226,7 +222,7 @@ class TaskFileRemoveCommand(sublime_plugin.WindowCommand):
 class TaskOpenTaskFileCommand(sublime_plugin.WindowCommand):
     def run(self):
         task = tasks.get_current_task()
-        self.window.open_file(tasks.path+task+".task")
+        self.window.open_file( os.path.join(tasks.path, task+".task") )
 
     def is_visible(self):
         return tasks.get_current_task() != None
@@ -251,32 +247,51 @@ class TaskListFilesCommand(sublime_plugin.WindowCommand):
 
     def is_visible(self):
         taskname = tasks.get_current_task()
-        task = tasks.get_task(tasks.path+taskname+".task")
+        task = tasks.get_task( os.path.join( tasks.path, taskname+".task") )
         return task != None and len(task["Files"]) > 0
 
-# class CvsStatusCommand(sublime_plugin.WindowCommand):
-#     def run(self):
-#         self.filename = self.window.active_view().file_name()
-#         #self.panel = self.window.new_file()
-#         t = threading.Thread(target=self.cvs_status())
-#         t.start()
+class TaskFileStatusCommand(sublime_plugin.WindowCommand):
+    def run(self):
+        taskname = tasks.get_current_task()
 
-#     def cvs_status(self):
-#         relpath = os.path.relpath( self.filename ,'.')
-#         path = os.path.dirname( relpath )
-#         filename = os.path.basename( relpath )
-#         cmd = "cd " + path + "&& cvs status " + filename
-#         cvs_status = helper.system_exec( cmd )
-#         m = re.compile(r".*?Status:\s*([a-zA-Z -]*)\s*.*?Sticky Tag:\s*(\S*).*", re.S).match(cvs_status)
-#         if m:
-#             self.window.active_view().set_status("cvs_status", "Status: " + m.group(1))
-#             self.window.active_view().set_status("cvs_branch", "Branch: " + m.group(2))
+        self.panel = self.window.new_file()
+        self.panel.set_scratch(True)
+        self.panel.set_name("File status for "+taskname)
+        files = tasks.list_files()
+        for f in files:
+            cvs.status( f, self.write_status )
 
-#     def write_to_panel(self):
-#         if len(self.textbuffer):
-#             panel_edit = self.panel.begin_edit()
-#             self.panel.insert(panel_edit, self.panel.size(), self.textbuffer)
-#             self.panel.end_edit(panel_edit)
-#             self.panel.show(self.panel.size())
-#             self.textbuffer = ""
-#             self.window.run_command("show_panel", {"panel": "output.test_panel"})
+    def write_status(self, status):
+        status_text = os.path.relpath(status["file"], helper.working_path) + "\n" + status["status"] + "\n\n"
+        self.panel.set_read_only(False)
+        panel_edit = self.panel.begin_edit()
+        self.panel.insert(panel_edit, self.panel.size(), status_text)
+        self.panel.end_edit(panel_edit)
+        self.panel.set_read_only(True)
+        self.panel.show(self.panel.size())
+        self.window.run_command("show_panel", {"panel": "output.test_panel"})
+
+class CvsUpdateCommand(sublime_plugin.WindowCommand):
+    def run(self):
+        self.filename = self.window.active_view().file_name()
+        cvs.status( self.filename, self.enter_branch )
+
+    def enter_branch(self, status):
+        self.window.show_input_panel('Revision:', status["branch"], self.update_to_branch, None, None)
+
+    def update_to_branch(self, branch):
+        if branch:
+            cvs.update(self.filename, branch, self.update_result)
+
+    def update_result(self, output):
+        if output["status"] == "conflict":
+            self.window.active_view().set_status("cvs_1",  "*** Conflict ***")
+            cvs.open_diff_tool(output["localfile"], output["remotefile"])
+        elif output["status"] == "merged":
+            self.window.active_view().set_status("cvs_1",  "*** Merged ***")
+        elif output["status"] == "updated":
+            self.window.active_view().set_status("cvs_1",  "*** Updated ***")
+
+
+    def is_visible(self):
+        return cvs.is_cvs_dir( self.window.active_view().file_name() )
