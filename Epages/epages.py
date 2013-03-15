@@ -13,24 +13,40 @@ class ep_on_post_save(sublime_plugin.EventListener):
     def on_post_save(self, view):
         # update ctags on vm
         action.update_ctags(view.file_name())
+        self.on_activated( view )
 
     def on_activated(self, view):
         self.view = view
         self.filename = view.file_name()
         if self.filename:
-            t = threading.Thread(target=self.cvs_status())
-            t.start()
+            cvs.status( self.filename, self.handle_status)
 
-    def cvs_status(self):
-        status = cvs.status( self.filename, self.write_status )
-
-
-    def write_status(self, status):
+    def handle_status(self, status):
+        settings = self.view.settings()
         self.view.set_status("cvs_1", "");
         if "status" in status:
             self.view.set_status("cvs_2", "Status: " + status["status"])
+            if status["status"] == "Needs Patch" or status["status"] == "Needs Merge":
+                if settings.get("ignorenextactivate") == 1:
+                    settings.set("ignorenextactivate", 0)
+                else:
+                    settings.set("ignorenextactivate", 1)
+                    update = sublime.ok_cancel_dialog("New version in repository.", "Update")
+                    if update and status["branch"]:
+                        cvs.update(self.filename, status["branch"], self.update_result)
         if "branch" in status:
             self.view.set_status("cvs_3", "Branch: " + status["branch"])
+
+    def update_result(self, output):
+        if output["status"] == "conflict":
+            self.view.set_status("cvs_1",  "*** Conflict ***")
+            cvs.open_diff_tool(output["localfile"], output["remotefile"])
+        elif output["status"] == "merged":
+            self.view.set_status("cvs_1",  "*** Merged ***")
+        elif output["status"] == "updated":
+            self.view.set_status("cvs_1",  "*** Updated ***")
+
+
 
 class OpenErrorLogCommand(sublime_plugin.WindowCommand):
     def run(self):

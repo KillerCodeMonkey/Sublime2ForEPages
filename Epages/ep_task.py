@@ -54,7 +54,7 @@ class ep_task(object):
         task = self.get_task( os.path.join(self.path, taskname + '.task') )
         if not filename in task["Files"]:
             task["Files"].append(filename)
-        self.helper.write_json_file( self.path + taskname + '.task', task )
+        self.helper.write_json_file( os.path.join(self.path, taskname + '.task'), task )
 
     def remove_file(self, filename):
         taskname = self.get_current_task()
