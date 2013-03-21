@@ -285,9 +285,14 @@ class TaskFileStatusCommand(sublime_plugin.WindowCommand):
         self.panel.set_name("File status for "+taskname)
         files = tasks.list_files()
         for f in files:
-            cvs.status( f, self.write_status )
+            cvs.status( f, self.status_callback )
 
-    def write_status(self, status):
+    def status_callback(self, status):
+        self.status = status
+        sublime.set_timeout(self.write_status, 0)
+
+    def write_status(self):
+        status = self.status
         status_text = os.path.relpath(status["file"], helper.working_path) + "\n" + status["status"] + "\n\n"
         self.panel.set_read_only(False)
         panel_edit = self.panel.begin_edit()
