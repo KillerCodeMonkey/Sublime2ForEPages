@@ -1,4 +1,6 @@
 import re
+import threading
+import os
 
 class ep_action(object):
 
@@ -14,7 +16,7 @@ class ep_action(object):
                 vm = self.helper.vm_data(filename)["vm"]
                 if vm: self.helper.system_call("ssh root@" + vm + " /bin/bash /srv/epages/eproot/maketags.sh &")
             else:
-                self.helper.system_call("restart epages")
+                return self.helper.system_exec("restart epages")
 
     def check_syntax(self, filename):
         if self.helper.is_perl(filename):
@@ -71,14 +73,26 @@ class ep_action(object):
             self.helper.system_exec("net stop epages")
             return self.helper.system_exec("net start epages")
 
-    def restart_perl(self, filename):
+    def restart_perl(self, filename, callback):
+        class restart_thread(threading.Thread):
+            def __init__(self, helper, callback):
+                threading.Thread.__init__(self)
+                self.helper = helper
+                self.callback = callback
+
+            def run(self):
         if self.helper.unix:
             vm = self.helper.vm_data(filename)["vm"]
-            if vm: return self.helper.system_exec("ssh root@" + vm + " /etc/init.d/epages6 restart_perl")
-            return "error"
+                    if vm:
+                        callback( self.helper.system_exec("ssh root@" + vm + " /etc/init.d/epages6 restart_perl") )
+                        return
+                    callback("error")
         else:
             self.helper.system_exec("net stop epages")
-            return self.helper.system_exec("net start epages")
+                    callback( self.helper.system_exec("net start epages") )
+
+        thread = restart_thread(self.helper, callback)
+        thread.start()
 
     def restart_app(self, filename):
         if self.helper.unix:
@@ -150,8 +164,7 @@ class ep_action(object):
     #--- external GUI
 
     def cvs(self, filename):
-        m = re.compile(r"(^.*)[/|\\](.*?)$").match(filename)
-        if m:
-            self.helper.system_call(self.helper.cvs + " " + m.group(1) + " &")
+        if os.path.isdir(filename):
+            self.helper.system_call(self.helper.cvs + " " + filename + " &")
         else:
-            return "error"
+            self.helper.system_call(self.helper.cvs + " " + os.path.dirname(filename) + " &")

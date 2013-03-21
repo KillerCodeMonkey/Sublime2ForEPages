@@ -1,6 +1,6 @@
 [
    { "caption": "-" },
-   { "caption": "Open containing folder in cvs...", "command": "open_cvs" },
+   { "caption": "Open containing folder in cvs...", "command": "open_cvs", "args": {"paths": []} },
    { "caption": "-" },
    { "command": "task_choose"},
    { "caption": "Add File", "command": "task_file_add"},

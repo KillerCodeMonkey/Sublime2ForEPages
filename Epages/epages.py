@@ -76,7 +76,10 @@ class CheckSyntaxCommand(sublime_plugin.WindowCommand):
             sublime.message_dialog(result)
 
 class OpenCvsCommand(sublime_plugin.WindowCommand):
-    def run(self):
+    def run(self, paths=None):
+        if paths:
+            filename = paths[0]
+        else:
         filename = self.window.active_view().file_name()
         cvs = action.cvs(filename)
         if cvs == "error":
@@ -103,8 +106,15 @@ class RestartAppCommand(sublime_plugin.WindowCommand):
 class RestartPerlCommand(sublime_plugin.WindowCommand):
     def run(self):
         filename = self.window.active_view().file_name()
-        result = action.restart_perl(filename)
-        if result == "error":
+        action.restart_perl(filename, self.restart_result)
+
+
+    def restart_result(self, result):
+        self.result = result
+        sublime.set_timeout(self.display_result, 0)
+
+    def display_result(self):
+        if self.result == "error":
             sublime.error_message("Not an epages6 folder")
         else:
             sublime.message_dialog("Perl restarted!")
