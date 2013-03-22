@@ -19,9 +19,14 @@ class ep_on_post_save(sublime_plugin.EventListener):
         self.view = view
         self.filename = view.file_name()
         if self.filename:
-            cvs.status( self.filename, self.handle_status)
+            cvs.status( self.filename, self.status_callback)
 
-    def handle_status(self, status):
+    def status_callback(self, status):
+        self.status = status
+        sublime.set_timeout(self.handle_status, 0)
+
+    def handle_status(self):
+        status = self.status
         settings = self.view.settings()
         self.view.set_status("cvs_1", "");
         if "status" in status:
@@ -33,9 +38,12 @@ class ep_on_post_save(sublime_plugin.EventListener):
                     settings.set("ignorenextactivate", 1)
                     update = sublime.ok_cancel_dialog("New version in repository.", "Update")
                     if update and status["branch"]:
-                        cvs.update(self.filename, status["branch"], self.update_result)
+                        cvs.update(self.filename, status["branch"], self.update_callback)
         if "branch" in status:
             self.view.set_status("cvs_3", "Branch: " + status["branch"])
+    def update_callback(self, output):
+        self.output = output
+        sublime.set_timeout(self,update_result, 0)
 
     def update_result(self, output):
         if output["status"] == "conflict":
@@ -228,20 +236,32 @@ class TaskCreateCommand(sublime_plugin.WindowCommand):
             tasks.create_task(self.taskname, description)
 
 class TaskFileAddCommand(sublime_plugin.WindowCommand):
-    def run(self):
+    def run(self, paths=None):
+        if paths:
+            filename = paths[0]
+        else:
         filename = self.window.active_view().file_name()
         tasks.add_file(filename)
 
-    def is_visible(self):
+    def is_visible(self, paths=None):
+        if paths:
+            filename = paths[0]
+        else:
         filename = self.window.active_view().file_name()
         return tasks.get_current_task() != None and not tasks.contains_file(filename)
 
 class TaskFileRemoveCommand(sublime_plugin.WindowCommand):
-    def run(self):
+    def run(self, paths=None):
+        if paths:
+            filename = paths[0]
+        else:
         filename = self.window.active_view().file_name()
         tasks.remove_file(filename)
 
-    def is_visible(self):
+    def is_visible(self, paths=None):
+        if paths:
+            filename = paths[0]
+        else:
         filename = self.window.active_view().file_name()
         return tasks.get_current_task() != None and tasks.contains_file(filename)
 
@@ -305,16 +325,26 @@ class TaskFileStatusCommand(sublime_plugin.WindowCommand):
 class CvsUpdateCommand(sublime_plugin.WindowCommand):
     def run(self):
         self.filename = self.window.active_view().file_name()
-        cvs.status( self.filename, self.enter_branch )
+        cvs.status( self.filename, self,status_callback )
 
-    def enter_branch(self, status):
+    def status_callback(self, status):
+        self.status = status
+        sublime.set_timeout(self.enter_branch, 0)
+
+    def enter_branch(self):
+        status = self.status
         self.window.show_input_panel('Revision:', status["branch"], self.update_to_branch, None, None)
 
     def update_to_branch(self, branch):
         if branch:
-            cvs.update(self.filename, branch, self.update_result)
+            cvs.update(self.filename, branch, self.update_callback)
 
-    def update_result(self, output):
+    def update_callback(self, output):
+        self.output = output
+        sublime.set_timeout(self.update_result, 0)
+
+    def update_result(self):
+        output = self.output
         if output["status"] == "conflict":
             self.window.active_view().set_status("cvs_1",  "*** Conflict ***")
             cvs.open_diff_tool(output["localfile"], output["remotefile"])
