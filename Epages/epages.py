@@ -80,7 +80,7 @@ class OpenCvsCommand(sublime_plugin.WindowCommand):
         if paths:
             filename = paths[0]
         else:
-        filename = self.window.active_view().file_name()
+            filename = self.window.active_view().file_name()
         cvs = action.cvs(filename)
         if cvs == "error":
             sublime.error_message("Not an epages6 folder")

@@ -81,14 +81,13 @@ class ep_action(object):
                 self.callback = callback
 
             def run(self):
-        if self.helper.unix:
-            vm = self.helper.vm_data(filename)["vm"]
+                if self.helper.unix:
+                    vm = self.helper.vm_data(filename)["vm"]
                     if vm:
                         callback( self.helper.system_exec("ssh root@" + vm + " /etc/init.d/epages6 restart_perl") )
-                        return
-                    callback("error")
-        else:
-            self.helper.system_exec("net stop epages")
+                        return  callback("error")
+                else:
+                    self.helper.system_exec("net stop epages")
                     callback( self.helper.system_exec("net start epages") )
 
         thread = restart_thread(self.helper, callback)
