@@ -19,14 +19,13 @@ Features:
 * Correct permissions (linux)
 * Log, StackTrace snippet (perl)
 * virtual folders (summarize files to virtual folders/tasks)
+* set jsdebuglvl 0..2
 
 ToDo:
 * copy to shared
 * ctags for win (?)
-* JSLint/XMLLint -> DTD?
 * ePages projectadministration -> jira integration?
 * Git
 * FileDiff
 * CodeIntel
-* Code-beautifier: JS, Perl::Tidy
 * Tasks in Sidebar like "Open files"
