@@ -74,6 +74,15 @@ class RestartAppCommand(sublime_plugin.WindowCommand):
         else:
             sublime.message_dialog("AppServer restarted!")
 
+class SetDebugLevel(sublime_plugin.WindowCommand):
+    def run(self, lvl):
+        filename = self.window.active_view().file_name()
+        result = action.set_debug(filename, lvl)
+        if result == "error":
+            sublime.error_message("Not an epages6 folder")
+        else:
+            sublime.message_dialog("DebugLvl "+ lvl + "!")
+
 class RestartPerlCommand(sublime_plugin.WindowCommand):
     def run(self):
         filename = self.window.active_view().file_name()

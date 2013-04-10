@@ -80,6 +80,14 @@ class ep_action(object):
             self.helper.system_exec("net stop epages")
             return self.helper.system_exec("net start epages")
 
+    def set_debug(self, filename, lvl):
+        if self.helper.unix:
+            vm = self.helper.vm_data(filename)["vm"]
+            if vm: return self.helper.system_exec("ssh root@" + vm + " /srv/epages/eproot/Perl/bin/perl /srv/epages/eproot/Cartridges/DE_EPAGES/Object/Scripts/set.pl -storename Store -path \"/\" JSDebugLevel=" + lvl)
+            return "error"
+        else:
+            return self.helper.system_exec(self.helper.working_path + "Perl/bin/perl.exe " + self.helper.working_path + "Cartridges\DE_EPAGES\Object\Scripts\set.pl -storename Store -path \"/\" JSDebugLevel=" + lvl)
+
     def restart_app(self, filename):
         if self.helper.unix:
             vm = self.helper.vm_data(filename)["vm"]

@@ -20,6 +20,27 @@
                         "caption": "Restart perl",
                         "command": "restart_perl"
                     },
+                    {
+                        "caption": "Set DebugLevel 0",
+                        "command": "set_debug_level",
+                        "args"   : {
+                            "lvl" : "0"
+                        }
+                    },
+                    {
+                        "caption": "Set DebugLevel 1",
+                        "command": "set_debug_level",
+                        "args"   : {
+                            "lvl" : "1"
+                        }
+                    },
+                    {
+                        "caption": "Set DebugLevel 2",
+                        "command": "set_debug_level",
+                        "args"   : {
+                            "lvl" : "2"
+                        }
+                    },
                     { "caption": "-" },
                     /*{
                         "caption": "Open file on consulting vm",
