@@ -4,6 +4,10 @@
    { "caption": "Restart epages6 application server", "command": "restart_app" },
    { "caption": "Restart perl", "command": "restart_perl" },
    { "caption": "Open containing folder in cvs...", "command": "open_cvs" },
-//   { "caption": "Open file on consulting vm", "command": "open_file_on_cs_vm"},
-   { "caption": "-" }
+   { "caption": "CVS Update", "command": "cvs_update" },
+   { "caption": "-" },
+   { "command": "task_choose"},
+   { "command": "task_file_status"},
+   { "caption": "Open File(s)...", "command": "task_list_files"},
+   { "caption": "View Task Configuration", "command": "task_open_task_file"}
 ]

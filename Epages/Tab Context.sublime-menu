@@ -1,0 +1,9 @@
+[
+   { "caption": "-" },
+   { "command": "task_choose"},
+   { "caption": "Open File(s)...", "command": "task_list_files"},
+   { "caption": "Add File", "command": "task_file_add"},
+   { "caption": "Remove File", "command": "task_file_remove"},
+   { "caption": "View Task Configuration", "command": "task_open_task_file"},
+   { "caption": "-" }
+]
